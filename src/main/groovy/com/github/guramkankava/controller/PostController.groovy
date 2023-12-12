@@ -3,7 +3,9 @@ package com.github.guramkankava.controller
 import com.github.guramkankava.request.PostRequest
 import com.github.guramkankava.document.Post
 import com.github.guramkankava.mapper.PostMapper
+import com.github.guramkankava.request.PostSearchRequest
 import com.github.guramkankava.response.PostResponse
+import com.github.guramkankava.service.PostSearchService
 import com.github.guramkankava.service.PostService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,17 +26,20 @@ class PostController {
 
     private final PostMapper postMapper
     private final PostService postService
+    private final PostSearchService postSearchService
 
-    PostController(PostMapper postMapper, PostService postService) {
+    PostController(PostMapper postMapper, PostService postService, PostSearchService postSearchService) {
         this.postMapper = postMapper
         this.postService = postService
+        this.postSearchService = postSearchService
     }
 
     @GetMapping
-    List<PostResponse> getPosts() {
-        postService.getAllPosts().stream().
-                map {postMapper.postDocumentToPostResponse(it)}.
-                collect(Collectors.toList())
+    List<PostResponse> getPosts(PostSearchRequest postSearchRequest) {
+        PostSearchService.PostSearchCriteria criteria = new PostSearchService.PostSearchCriteria()
+        criteria.setSubscription(postSearchRequest.getSubscription())
+        criteria.setUsername(postSearchRequest.getUsername())
+        postSearchService.find(criteria).stream().map(postMapper::postDocumentToPostResponse).collect(Collectors.toList())
     }
 
     @PostMapping

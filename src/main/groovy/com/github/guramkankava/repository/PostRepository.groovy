@@ -7,4 +7,7 @@ interface PostRepository extends MongoRepository<Post, String>, PostRepositoryCu
 
     Optional<Post> findByIdAndUsername(String id, String username)
 
+    List<Post> findByUsername(String username)
+
+    List<Post> findByUsernameIn(Set<String> usernames)
 }

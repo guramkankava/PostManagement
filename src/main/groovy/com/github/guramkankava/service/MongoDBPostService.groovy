@@ -23,13 +23,12 @@ class MongoDBPostService implements PostService {
     }
 
     @Override
-    Post get(String id) {
-        postRepository.findById(id).
-            orElseThrow(() -> new PostNotFoundException("Post not found " + id))
+    List<Post> getOwn() {
+        postRepository.findByUsername(authService.getAuthentication().getName())
     }
 
     @Override
-    Post getOwn(String id) {
+    Post getOwnById(String id) {
         postRepository.findByIdAndUsername(id, authService.getAuthentication().getName()).
             orElseThrow(() -> new PostNotFoundException("Post not found " + id))
     }
@@ -42,18 +41,18 @@ class MongoDBPostService implements PostService {
 
     @Override
     Post updateAPost(Post post) {
-        getOwn(post.getId())
+        getOwnById(post.getId())
         postRepository.save(post)
     }
 
     @Override
-    List<Post> getAllPosts() {
-        postRepository.findAll()
+    List<Post> getByUsername(Set<String> usernames) {
+        postRepository.findByUsernameIn(usernames)
     }
 
     @Override
     void deleteAPost(String postId) {
-        Post post = getOwn(postId)
+        Post post = getOwnById(postId)
         commentService.deleteMultiple(post.comments.stream().map(Comment::getId).collect(Collectors.toSet()))
         likeService.deleteMultiple(post.likes.stream().map(Like::getId).collect(Collectors.toSet()))
         postRepository.delete(post)

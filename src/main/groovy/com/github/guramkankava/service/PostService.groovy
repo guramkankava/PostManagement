@@ -4,15 +4,15 @@ import com.github.guramkankava.document.Post
 
 interface PostService {
 
-    Post get(String id)
+    List<Post> getOwn()
 
-    Post getOwn(String id)
+    Post getOwnById(String id)
 
     Post addAPost(Post post)
 
     Post updateAPost(Post post)
 
-    List<Post> getAllPosts()
+    List<Post> getByUsername(Set<String> usernames)
 
     void deleteAPost(String postId)
 }
