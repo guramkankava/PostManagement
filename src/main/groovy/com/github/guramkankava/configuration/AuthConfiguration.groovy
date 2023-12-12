@@ -48,7 +48,8 @@ class AuthConfiguration {
                csrfCustomizer.disable()
             }).
             authorizeHttpRequests(authCustomizer -> {
-                authCustomizer.requestMatchers('api/v1/users/register').permitAll()
+               authCustomizer.requestMatchers('api/v1/users/register').permitAll()
+               authCustomizer.requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll();
                authCustomizer.anyRequest().authenticated()
             }).
             oauth2ResourceServer(oauth2RSCustomizer -> {
