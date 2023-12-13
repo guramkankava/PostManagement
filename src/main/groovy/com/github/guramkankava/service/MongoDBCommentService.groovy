@@ -1,26 +1,30 @@
 package com.github.guramkankava.service
 
 import com.github.guramkankava.document.Comment
-import com.github.guramkankava.exception.CommentNotFound
+import com.github.guramkankava.exception.CommentNotFoundException
 import com.github.guramkankava.repository.CommentRepository
 
 class MongoDBCommentService implements CommentService {
 
     private final CommentRepository commentRepository
+    private final AuthService authService
 
-    MongoDBCommentService(CommentRepository commentRepository) {
+    MongoDBCommentService(CommentRepository commentRepository, AuthService authService) {
         this.commentRepository = commentRepository
+        this.authService = authService
     }
 
     @Override
-    Comment getAComment(String commentId) {
-        commentRepository.findById(commentId).orElseThrow {new CommentNotFound('Comment not found' + commentId)}
+    Comment getOwnComment(String id) {
+        commentRepository.findByIdAndUsername(id, authService.getAuthentication().getName()).
+        orElseThrow(() -> new CommentNotFoundException("Comment not found ${id}"))
     }
 
     @Override
     Comment updateAComment(String commentId, Comment comment) {
-        getAComment(commentId)
+        getOwnComment(commentId)
         comment.setId(commentId)
+        comment.setUsername(authService.getAuthentication().getName())
         commentRepository.save(comment)
     }
 

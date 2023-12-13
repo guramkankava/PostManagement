@@ -2,6 +2,7 @@ package com.github.guramkankava.controller
 
 import com.github.guramkankava.mapper.CommentMapper
 import com.github.guramkankava.request.CommentRequest
+import com.github.guramkankava.response.CommentResponse
 import com.github.guramkankava.service.CommentService
 import com.github.guramkankava.service.PostCommentService
 import org.springframework.http.HttpStatus
@@ -28,16 +29,17 @@ class CommentController {
         this.commentService = commentService
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/post/{postId}")
-    void addAComment(@PathVariable("postId") String postId, @RequestBody CommentRequest commentRequest) {
+    CommentResponse addAComment(@PathVariable("postId") String postId, @RequestBody CommentRequest commentRequest) {
         def comment = commentMapper.commentRequestToCommentDocument(commentRequest)
-        postCommentService.commentOnPost(postId, comment)
+        commentMapper.commentDocumentToCommentResponse(postCommentService.commentOnPost(postId, comment))
     }
 
     @PutMapping('/{commentId}')
-    void updateAComment(@PathVariable('commentId') String commentId, @RequestBody CommentRequest commentRequest) {
+    CommentResponse updateAComment(@PathVariable('commentId') String commentId, @RequestBody CommentRequest commentRequest) {
         def comment = commentMapper.commentRequestToCommentDocument(commentRequest)
-        commentService.updateAComment(commentId, comment)
+        commentMapper.commentDocumentToCommentResponse(commentService.updateAComment(commentId, comment))
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

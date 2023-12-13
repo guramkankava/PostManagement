@@ -30,7 +30,7 @@ class MongoDBPostService implements PostService {
     @Override
     Post getOwnById(String id) {
         postRepository.findByIdAndUsername(id, authService.getAuthentication().getName()).
-            orElseThrow(() -> new PostNotFoundException("Post not found " + id))
+            orElseThrow(() -> new PostNotFoundException("Post not found ${id}"))
     }
 
     @Override
