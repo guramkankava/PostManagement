@@ -42,7 +42,7 @@ class MongoDBPostService implements PostService {
     @Override
     Post updateAPost(Post post) {
         getOwnById(post.getId())
-        postRepository.save(post)
+        addAPost(post)
     }
 
     @Override

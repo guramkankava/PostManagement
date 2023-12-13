@@ -42,6 +42,7 @@ class PostController {
         postSearchService.find(criteria).stream().map(postMapper::postDocumentToPostResponse).collect(Collectors.toList())
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     PostResponse postAPost(@RequestBody PostRequest postRequest) {
         Post post = postMapper.postRequestToPostDocument(postRequest)
@@ -49,6 +50,7 @@ class PostController {
         postMapper.postDocumentToPostResponse post
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping
     PostResponse updateAPost(@RequestBody PostRequest postRequest) {
         Post post = postMapper.postRequestToPostDocument(postRequest)
