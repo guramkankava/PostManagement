@@ -12,4 +12,6 @@ API utilization: any:/api -H Authorization Bearer token
 
 Swagger/OpenAPI is available at http://localhost:8080/postmanagement/swagger-ui/index.html#/ 
 
-
+Running in container<br />
+1 build image : ./gradlew bootBuildImage --imageName=githubguramkankava/postmanagement <br />
+2 docker-compose up
